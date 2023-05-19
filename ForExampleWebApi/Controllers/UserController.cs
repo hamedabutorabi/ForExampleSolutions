@@ -1,5 +1,6 @@
 ﻿using ForExampleWebApi.Data;
 using ForExampleWebApi.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +32,20 @@ namespace ForExampleWebApi.Controllers
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new {id = user.Id}, user);
+        }
+
+        [HttpPut]
+
+        public async Task<IActionResult> ChangePassword(int id, string newPasswordHash)
+        {
+            var user = _context.Users.Find(id);
+            if(user == null)
+            {
+                return NotFound();
+            }
+            user.PasswordHash = newPasswordHash;
+            await _context.SaveChangesAsync();
+            return Ok(user);
         }
     }
 
