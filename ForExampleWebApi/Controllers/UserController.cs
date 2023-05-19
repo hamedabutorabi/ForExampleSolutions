@@ -16,5 +16,22 @@ namespace ForExampleWebApi.Controllers
         }
         [HttpGet]
         public async Task<IEnumerable<User>> Get() => await _context.Users.ToListAsync();
+
+        [HttpGet("id")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            return user == null ? NotFound() : Ok(user);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<IActionResult> Create(User user)
+        {
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetById), new {id = user.Id}, user);
+        }
     }
+
 }
