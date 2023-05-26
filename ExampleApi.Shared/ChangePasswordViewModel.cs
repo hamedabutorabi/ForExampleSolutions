@@ -8,10 +8,6 @@ namespace ExampleApi.Shared
     public class ChangePasswordViewModel
     {
         [Required]
-        [Display(Name = "Current password")]
-        public string UserName { get; set; }
-
-        [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Current password")]
         public string OldPassword { get; set; }
