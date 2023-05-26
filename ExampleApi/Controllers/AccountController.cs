@@ -26,8 +26,13 @@ namespace ExampleApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            var user = await _userManager.FindByNameAsync(model.UserName);
+            var userClaims = HttpContext.User.Claims;
+            var userId = userClaims.FirstOrDefault(c => c.Type == "user_id")?.Value;
+            if(userId == null)
+            {
+                return NotFound();
+            }
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return StatusCode(StatusCodes.Status404NotFound);
