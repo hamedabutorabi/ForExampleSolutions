@@ -27,12 +27,12 @@ namespace ExampleApi.Controllers
                 return BadRequest(ModelState);
             }
             var userClaims = HttpContext.User.Claims;
-            var userId = userClaims.FirstOrDefault(c => c.Type == "user_id")?.Value;
-            if(userId == null)
+            var userEmail = userClaims.FirstOrDefault(c => c.Type == "Email")?.Value;
+            if(userEmail == null)
             {
                 return NotFound();
             }
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByEmailAsync(userEmail);
             if (user == null)
             {
                 return StatusCode(StatusCodes.Status404NotFound);
