@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ExampleApi.Services
 {
@@ -34,10 +35,17 @@ namespace ExampleApi.Services
                 UserName = model.UserName,
                 Email = model.Email
             };
+            if(model.Password != model.ConfirmPassword)
+            {
+                return new UserManagerResponse
+                {
+                    IsSuccess = false,
+                    Message = "password and confirm password does not match!",
+                };
+            }    
             var result = await _userManager.CreateAsync(identityUser,model.Password);
             if(result.Succeeded)
             {
-                //TODO Send welcome and link for first login email
                 return new UserManagerResponse
                 {
                     IsSuccess = true,
